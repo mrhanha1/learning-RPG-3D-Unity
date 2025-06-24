@@ -1,26 +1,51 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class playerMovement : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    private Rigidbody rb;
+    private PlayerControls controls;
+    private Vector2 moveInput;
+    private bool isGrounded;
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+
+    void awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
+        controls = new PlayerControls();
+        controls.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
+        controls.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+        controls.Player.Jump.performed += ctx => Jump();
+    }
+    void OnEnable()
+    {
+        controls.Enable();
+    }
+    void OnDisable()
+    {
+        controls.Disable();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
-        if (Input.GetButtonDown("Jump"))
+        Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+        rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
+    }
+    void Jump()
+    {
+        if (isGrounded)
         {
-            rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            isGrounded = false;
         }
-        Vector3 movement = new Vector3(moveX, 0f, moveZ).normalized * moveSpeed * Time.fixedDeltaTime;
-
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
     }
 }
