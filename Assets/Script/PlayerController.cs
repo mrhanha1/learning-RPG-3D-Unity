@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float sprintSpeed = 10f;
     [SerializeField] private float jumpForce = 10f;
-    [SerializeField] private float groundDistance = 0.2f;
+    //[SerializeField] private float groundDistance = 0.2f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private bool faceMoveDirection = false;
 
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
         moveInput = context.ReadValue<Vector2>();
         animator.SetFloat("speed",moveInput.magnitude);
         if ( moveInput==null){Debug.LogError("Move input is null.");return;}
-        Debug.Log($"Move input: {moveInput}");
+        //Debug.Log($"Move input: {moveInput}");
     }
     public void OnSprint(InputAction.CallbackContext context)
     {
@@ -47,11 +47,11 @@ public class PlayerController : MonoBehaviour
     }
     public void OnJump(InputAction.CallbackContext context)
     {
-        Debug.Log($"{context.performed}, is grounded: {controller.isGrounded}");
+        //Debug.Log($"{context.performed}, is grounded: {controller.isGrounded}");
         animator.SetBool("isGrounded", controller.isGrounded);
         if (context.performed && controller.isGrounded)
         {
-            Debug.Log("Jump performed.");
+            //Debug.Log("Jump performed.");
             velocity.y =Mathf.Sqrt(jumpForce * -2f * gravity);
         }
     }

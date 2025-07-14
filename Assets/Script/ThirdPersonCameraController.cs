@@ -20,7 +20,7 @@ public class ThirdPersonCameraController : MonoBehaviour
         control = new InputActionSystem();
         if (control == null )
         {
-            Debug.Log("Cannot get the InputAction for control");
+            Debug.LogError("Cannot get the InputAction for control");
             return;
         }
         control.Enable();
@@ -39,7 +39,7 @@ public class ThirdPersonCameraController : MonoBehaviour
     private void HandleMouseScroll(InputAction.CallbackContext context)
     {
         ScrollDelta = context.ReadValue<Vector2>();
-        Debug.Log($"Mouse is scrolling. ScrollDelta: {ScrollDelta}");
+        //Debug.Log($"Mouse is scrolling. ScrollDelta: {ScrollDelta}");
         targetDistance -= ScrollDelta.y * zoomSpeed;
         targetDistance = Mathf.Clamp(targetDistance, minDistance, maxDistance);
     }
